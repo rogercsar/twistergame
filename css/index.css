@@ -1,0 +1,102 @@
+/* Estilos para a página index.html */
+body {
+    font-family: sans-serif;
+    background-color: #eef2f7; /* Um azul/cinza claro diferente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    max-width: 400px; /* Limita a largura do container */
+    width: 90%;
+}
+
+.login-container h1 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 2em;
+}
+.login-container h1 i {
+    margin-right: 10px;
+}
+
+
+.login-container p {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.input-group {
+    margin-bottom: 25px;
+    text-align: left; /* Alinha label e input à esquerda */
+}
+
+.input-group label {
+    display: block; /* Coloca o label em sua própria linha */
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+.input-group label i {
+    margin-right: 5px;
+    color: #007bff;
+}
+
+
+.input-group input[type="text"] {
+    width: 100%; /* Ocupa toda a largura do container */
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* Garante que padding não aumente a largura total */
+    transition: border-color 0.2s ease;
+}
+
+.input-group input[type="text"]:focus {
+    border-color: #007bff;
+    outline: none; /* Remove o outline padrão do navegador */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+#startButton {
+    background-color: #28a745; /* Verde */
+    color: white;
+    border: none;
+    padding: 15px 35px; /* Botão maior */
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%; /* Botão ocupa largura total */
+    margin-top: 10px; /* Espaço acima do botão */
+}
+#startButton i {
+    margin-right: 8px;
+}
+
+
+#startButton:hover {
+    background-color: #218838; /* Verde mais escuro */
+}
+
+.error-message {
+    color: #dc3545; /* Vermelho para erro */
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
