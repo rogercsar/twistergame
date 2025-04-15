@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Twister Online</title>
+    <!-- Link para o seu arquivo CSS principal -->
+    <link rel="stylesheet" href="css/game.css">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- (Opcional) Adicione os estilos CSS aqui ou em game.css -->
+    <style>
+        /* Estilos básicos do body (ajuste conforme necessário) */
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column; /* Empilha game-info e main-layout */
+            align-items: center; /* Centraliza horizontalmente */
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Estilos para a barra de informações no topo */
+        #game-info {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 90%; /* Ajuste a largura conforme necessário */
+            max-width: 1200px; /* Limita a largura máxima */
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        #game-info > div {
+            margin: 0 15px; /* Espaçamento entre os itens */
+        }
+        #welcomeMessage {
+             margin: 0; /* Remove margens padrão do <p> */
+             font-size: 1em; /* Ajusta tamanho se necessário */
+             color: #555;
+        }
+
+        /* Container principal para o layout Flexbox */
+        .main-layout-container {
+            display: flex; /* ATIVA O FLEXBOX */
+            justify-content: center; /* Centraliza se houver espaço extra */
+            align-items: flex-start; /* Alinha os itens no topo */
+            gap: 30px; /* Espaço entre a área do jogo e o histórico */
+            width: 95%; /* Largura total do layout */
+            max-width: 1400px; /* Largura máxima */
+        }
+
+        /* Wrapper para a coluna da esquerda (Jogo + Controles) */
+        .game-area-wrapper {
+            flex: 3; /* Faz a área do jogo ocupar mais espaço (proporção 3:1 com histórico) */
+            display: flex;
+            flex-direction: column; /* Empilha canvas e controles */
+            align-items: center; /* Centraliza o conteúdo da coluna */
+            min-width: 0; /* Necessário para flex-shrink funcionar corretamente */
+        }
+
+        /* Estilos existentes para game-container, canvas-area, canvas */
+        .game-container {
+            background-color: #ffffff;
+            padding: 20px; /* Ajuste padding se necessário */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 100%; /* Ocupa a largura do wrapper */
+            max-width: 850px; /* Ajuste conforme o tamanho do canvas */
+            margin-bottom: 20px; /* Espaço antes dos controles */
+        }
+        .canvas-area {
+            position: relative;
+            width: fit-content;
+            margin: 0 auto; /* Centraliza canvas dentro do game-container */
+        }
+        canvas {
+            display: block;
+            max-width: 100%;
+            /* border: 1px solid #eee; */
+        }
+        /* Estilos dos marcadores (.body-marker, #marker-...) permanecem os mesmos */
+        /* Ajuste as posições iniciais (left) se necessário */
+        .body-marker {
+            position: absolute;
+            width: 40px; height: 40px; border: 2px solid black; border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.85); cursor: grab; z-index: 10;
+            display: flex; justify-content: center; align-items: center; font-size: 16px;
+            font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); user-select: none;
+            transition: box-shadow 0.2s ease, opacity 0.2s ease, outline 0.2s ease;
+        }
+        .body-marker.dragging { cursor: grabbing; opacity: 0.7; box-shadow: 5px 5px 15px rgba(0,0,0,0.5); }
+        #marker-hand-left { top: 50px; left: -60px; background-color: #ffcccb; color: darkred;}
+        #marker-hand-right { top: 110px; left: -60px; background-color: #add8e6; color: darkblue;}
+        #marker-foot-left { top: 170px; left: -60px; background-color: #fffacd; color: #b8860b;}
+        #marker-foot-right { top: 230px; left: -60px; background-color: #90ee90; color: darkgreen;}
+        /* Cores dos ícones (se usar <i>) */
+        #marker-hand-left i { color: darkred; }
+        #marker-hand-right i { color: darkblue; }
+        #marker-foot-left i { color: #b8860b; }
+        #marker-foot-right i { color: darkgreen; }
+
+
+        /* Estilos existentes para #controls, #spinButton, #resultDisplay */
+        #controls {
+            text-align: center;
+            width: 100%;
+            max-width: 850px; /* Consistente com game-container */
+        }
+        #spinButton {
+            background-color: #28a745; color: white; border: none; padding: 12px 25px;
+            font-size: 18px; font-weight: bold; border-radius: 5px; cursor: pointer;
+            transition: background-color 0.2s ease, opacity 0.2s ease; margin-bottom: 15px;
+        }
+        #spinButton:hover:not(:disabled) { background-color: #218838; }
+        #spinButton:disabled { background-color: #6c757d; cursor: not-allowed; opacity: 0.65; }
+        #resultDisplay {
+            font-size: 1.6em; font-weight: bold; color: #007bff; min-height: 1.5em;
+            padding: 10px 15px; background-color: #e9ecef; border-radius: 5px;
+            border: 1px solid #ced4da; line-height: 1.4;
+        }
+
+        /* Estilos para a Seção de Histórico (Coluna da Direita) */
+        #highScoreSection {
+            flex: 1; /* Faz o histórico ocupar menos espaço (proporção 3:1) */
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            min-width: 280px; /* Largura mínima para o histórico */
+            max-width: 400px; /* Largura máxima */
+            /* display: none; -> Mantido, JS controla a visibilidade */
+            margin-top: 0; /* Removido, pois align-items: flex-start cuida disso */
+            text-align: center;
+        }
+        #highScoreSection h2 { margin-top: 0; margin-bottom: 15px; color: #495057; font-size: 1.4em; }
+        #highScoreSection h2 i { margin-right: 8px; }
+        #highScoreList { list-style-type: decimal; list-style-position: inside; padding-left: 0; margin: 0; text-align: left; }
+        #highScoreList li { padding: 8px 5px; border-bottom: 1px dashed #ced4da; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center; }
+        #highScoreList li:last-child { border-bottom: none; }
+        #highScoreList .score-entry { display: contents; }
+        #highScoreList .score-name { font-weight: bold; color: #007bff; margin-right: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 1; }
+        #highScoreList .score-value { color: #28a745; font-weight: bold; white-space: nowrap; flex-shrink: 0; }
+        #clearScoresButton { margin-top: 15px; padding: 5px 10px; font-size: 0.8em; background-color: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        #clearScoresButton:hover { background-color: #c82333; }
+
+        /* Estilos de Highlight (devem estar no game.css idealmente) */
+        .body-marker.highlight { outline: 3px solid gold; box-shadow: 0 0 10px gold, 2px 2px 5px rgba(0,0,0,0.3); }
+        .body-marker.highlight-error { outline: 3px solid red; box-shadow: 0 0 10px red, 2px 2px 5px rgba(0,0,0,0.3); animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
+
+        /* Media Query para Responsividade (Exemplo) */
+        @media (max-width: 1000px) { /* Ajuste o breakpoint conforme necessário */
+            .main-layout-container {
+                flex-direction: column; /* Empilha as colunas */
+                align-items: center; /* Centraliza os blocos */
+                gap: 20px;
+            }
+            .game-area-wrapper {
+                flex-basis: auto; /* Reseta a base flex */
+                width: 100%; /* Ocupa toda a largura disponível */
+                order: 1; /* Ordem no layout empilhado */
+            }
+            #highScoreSection {
+                flex-basis: auto; /* Reseta a base flex */
+                width: 90%; /* Ajusta a largura */
+                max-width: 500px; /* Limita a largura */
+                order: 2; /* Ordem no layout empilhado */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Informações de Pontuação e Vidas (Topo) -->
+    <div id="game-info">
+        <div><p id="welcomeMessage" style="font-size: 1.1em; color: #555; margin-bottom: 0;"></p></div> <!-- Mensagem de boas-vindas -->
+        <div><i class="fa-solid fa-star" style="color: #FFD43B;"></i> Pontuação: <span id="scoreDisplay">0</span></div>
+        <div><i class="fa-solid fa-heart" style="color: #ec0914;"></i> Vidas: <span id="livesDisplay">3</span></div>
+    </div>
+
+    <!-- Container Principal para Layout (Flexbox) -->
+    <div class="main-layout-container">
+
+        <!-- Coluna da Esquerda: Jogo e Controles -->
+        <div class="game-area-wrapper">
+
+            <!-- Container do Jogo (Canvas e Marcadores) -->
+            <div class="game-container">
+                <div class="canvas-area">
+                    <canvas id="canvas" width="800" height="400"></canvas> <!-- Ajuste width/height se necessário -->
+                    <!-- Marcadores Arrastáveis -->
+                    <div id="marker-hand-left" class="body-marker" title="Mão Esquerda"><i class="fa-solid fa-hand"></i> L</div>
+                    <div id="marker-hand-right" class="body-marker" title="Mão Direita"><i class="fa-solid fa-hand"></i> R</div>
+                    <div id="marker-foot-left" class="body-marker" title="Pé Esquerdo"><i class="fa-solid fa-shoe-prints"></i> L</div>
+                    <div id="marker-foot-right" class="body-marker" title="Pé Direito"><i class="fa-solid fa-shoe-prints"></i> R</div>
+                </div>
+            </div> <!-- Fim do game-container -->
+
+            <!-- Controles do Jogo (Botão e Display) -->
+            <div id="controls">
+                <button id="spinButton"><i class="fa-solid fa-gamepad"></i> Iniciar Jogo</button>
+                <div id="resultDisplay">Clique em Iniciar para começar!</div>
+            </div>
+
+        </div> <!-- Fim do game-area-wrapper -->
+
+        <!-- Coluna da Direita: Histórico de Pontuações -->
+        <div id="highScoreSection" style="display: none;"> <!-- Inicialmente oculto -->
+            <h2><i class="fa-solid fa-trophy" style="color: gold;"></i> Melhores Pontuações</h2>
+            <ol id="highScoreList">
+                <li>Carregando...</li>
+            </ol>
+            <button id="clearScoresButton">Limpar Histórico</button>
+        </div> <!-- Fim do highScoreSection -->
+
+    </div> <!-- Fim do main-layout-container -->
+
+    <!-- Script do Jogo -->
+    <script src="js/game.js"></script>
+</body>
+</html>

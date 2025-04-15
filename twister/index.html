@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo ao Twister Online!</title>
+    <!-- Link para o CSS da página inicial -->
+    <link rel="stylesheet" href="css/index.css">
+    <!-- (Opcional) Font Awesome se quiser usar ícones aqui também -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <h1><i class="fa-solid fa-hand-sparkles" style="color: #007bff;"></i> Twister Online</h1>
+        <p>Prepare-se para se contorcer!</p>
+
+        <div class="input-group">
+            <label for="usernameInput"><i class="fa-solid fa-user"></i> Digite seu nome:</label>
+            <input type="text" id="usernameInput" placeholder="Seu nome aqui" required>
+        </div>
+
+        <button id="startButton"><i class="fa-solid fa-play"></i> Jogar!</button>
+
+        <p id="error-message" class="error-message" style="display: none;">Por favor, digite seu nome para continuar.</p>
+    </div>
+
+    <!-- Script para a lógica da página inicial -->
+    <script src="js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+/* Estilos básicos - Mova para game.css se preferir */
+body {
+    font-family: sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px; /* Adiciona um respiro caso o container fique grande */
+    box-sizing: border-box;
+    flex-direction: column;
+}
+.game-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 100%; /* Evita que o container ocupe a tela toda em telas largas */
+}
+h1 {
+    color: #333;
+    margin-top: 0; /* Remove margem superior padrão */
+    margin-bottom: 20px;
+}
+#game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555;
+    width: 100%;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    margin: 0 auto 20px auto; /* Centraliza o game-info */
+}
+#game-info > div { /* Espaçamento entre Pontuação e Vidas */
+     margin: 0 10px;
+}
+.canvas-area {
+    position: relative; /* Para posicionamento absoluto dos marcadores */
+    width: fit-content; /* Ajusta ao tamanho do canvas */
+    margin: 0 auto 25px auto; /* Centraliza e adiciona margem inferior */
+}
+canvas {
+    display: block; /* Remove espaço extra */
+    max-width: 100%; /* Responsividade básica */
+    /* border: 1px solid #eee; /* Borda sutil para debug */
+}
+.body-marker {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.85); /* Levemente menos transparente */
+    cursor: grab;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px; /* Ajuste tamanho do ícone/letra */
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    user-select: none; /* Evita seleção de texto */
+    transition: box-shadow 0.2s ease, opacity 0.2s ease, outline 0.2s ease; /* Transições suaves */
+}
+.body-marker.dragging {
+    cursor: grabbing;
+    opacity: 0.7;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+}
+/* Posições iniciais dos marcadores (ajuste conforme necessário) */
+#marker-hand-left { top: 10px; left: -60px; background-color: #ffcccb; }
+#marker-hand-right { top: 70px; left: -60px; background-color: #add8e6; }
+#marker-foot-left { top: 130px; left: -60px; background-color: #fffacd; } /* LightYellow */
+#marker-foot-right { top: 190px; left: -60px; background-color: #90ee90; }
+/* Cores dos ícones/letras dentro dos marcadores */
+#marker-hand-left i, #marker-hand-left { color: darkred; }
+#marker-hand-right i, #marker-hand-right { color: darkblue; }
+#marker-foot-left i, #marker-foot-left { color: #b8860b; } /* DarkGoldenrod */
+#marker-foot-right i, #marker-foot-right { color: darkgreen; }
+
+#controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+#spinButton {
+    background-color: #28a745; /* Verde para iniciar */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    margin-bottom: 20px;
+    width: 100%; /* Largura total do botão */
+}
+#spinButton:hover:not(:disabled) {
+    background-color: #218838; /* Verde mais escuro */
+}
+#spinButton:disabled {
+    background-color: #6c757d; /* Cinza quando desabilitado */
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+#resultDisplay {
+    font-size: 1.6em;
+    font-weight: bold;
+    color: #007bff; /* Azul para instruções */
+    min-height: 1.5em; /* Evita pulos de layout */
+    padding: 10px 15px;
+    background-color: #e9ecef; /* Fundo cinza claro */
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    line-height: 1.4; /* Melhora leitura */
+}
+
+/* Estilos de Highlight (devem estar no game.css idealmente) */
+.body-marker.highlight {
+    outline: 3px solid gold;
+    box-shadow: 0 0 10px gold, 2px 2px 5px rgba(0,0,0,0.3); /* Mantém sombra base */
+}
+.body-marker.highlight-error {
+    outline: 3px solid red;
+    box-shadow: 0 0 10px red, 2px 2px 5px rgba(0,0,0,0.3); /* Mantém sombra base */
+    animation: shake 0.5s;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+
+/* Adicione isso ao final de game.css */
+
+#highScoreSection {
+    background-color: #f8f9fa; /* Fundo levemente diferente */
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6; /* Borda sutil */
+    margin-top: 30px;
+    max-width: 450px; /* Limita a largura */
+    margin-left: auto;
+    margin-right: auto; /* Centraliza a seção */
+    text-align: center; /* Centraliza o H2 e o botão */
+}
+
+#highScoreSection h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #495057; /* Cor mais escura para o título */
+    font-size: 1.4em;
+}
+#highScoreSection h2 i {
+    margin-right: 8px;
+}
+
+
+#highScoreList {
+    list-style-type: decimal; /* Numeração padrão */
+    list-style-position: inside; /* Números dentro da área do li */
+    padding-left: 0; /* Remove padding padrão da lista */
+    margin: 0;
+    text-align: left; /* Alinha o texto dos itens à esquerda */
+}
+
+#highScoreList li {
+    padding: 8px 5px; /* Espaçamento interno */
+    border-bottom: 1px dashed #ced4da; /* Linha separadora */
+    font-size: 1.1em;
+    display: flex; /* Para alinhar nome e pontuação */
+    justify-content: space-between; /* Espaça nome e pontuação */
+    align-items: center;
+}
+
+#highScoreList li:last-child {
+    border-bottom: none; /* Remove a linha do último item */
+}
+
+/* Estilos para nome e pontuação dentro do <li> (opcional) */
+#highScoreList .score-entry {
+    display: contents; /* Faz os spans se comportarem como texto direto no flex */
+}
+
+#highScoreList .score-name {
+    font-weight: bold;
+    color: #007bff; /* Cor para o nome */
+    margin-right: 10px; /* Espaço entre nome e pontuação */
+    overflow: hidden; /* Evita que nomes longos quebrem o layout */
+    text-overflow: ellipsis; /* Adiciona "..." se o nome for muito longo */
+    white-space: nowrap; /* Impede quebra de linha no nome */
+    flex-shrink: 1; /* Permite que o nome encolha se necessário */
+}
+
+#highScoreList .score-value {
+    color: #28a745; /* Cor para a pontuação */
+    font-weight: bold;
+    white-space: nowrap; /* Evita quebra de linha na pontuação */
+    flex-shrink: 0; /* Impede que a pontuação encolha */
+}
+
+#clearScoresButton:hover {
+    background-color: #c82333; /* Vermelho mais escuro no hover */
+}
